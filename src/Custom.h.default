@@ -1,0 +1,40 @@
+
+#define USE_ESPEASY_CUSTOM_H 0
+
+#if USE_ESPEASY_CUSTOM_H
+  #warning "Using EspEasy Custom.h"
+  #include "../../../src/Custom.h"
+  #define MINOTA_WIFI_USE_CUSTOM_DEPLOYMENT 1
+  #define MINOTA_WIFI_AP_KEY DEFAULT_AP_KEY
+  #define MINOTA_OTA_PASSWORD DEFAULT_ADMIN_PASS
+#else
+  #define MINOTA_AUTO_UPDATE_URL "http://192.168.0.3:10359/p/ee/firmware"
+  #define MINOTA_WIFI_AP_KEY "esprecovery"
+  #define MINOTA_OTA_PASSWORD "esprecovery"
+#endif
+
+#define MINOTA_DEBUG_SERIAL 0 //decrease flash size, if debug over serial is needed
+
+#define MINOTA_WIFI_CONNECT_TO_AP 1
+#define MINOTA_WIFI_AP_SSID "MINOTA"
+#define MINOTA_AUTO_UPDATE_URL_APMODE "http://192.168.4.2:10359/p/ee/firmware"
+
+//detect from anothers:
+#if MINOTA_AUTO_UPDATE
+  #ifndef MINOTA_AUTO_UPDATE_URL
+    #ifdef DEFAULT_PROVISIONING_URL
+      #define MINOTA_AUTO_UPDATE_URL DEFAULT_PROVISIONING_URL "firmware"
+    #else
+      #error "DEFAULT_PROVISIONING_URL is not defined, define MINOTA_AUTO_UPDATE_URL or set USE_ESPEASY_CUSTOM_H with a valid DEFAULT_PROVISIONING_URL"
+    #endif
+  #endif
+#endif
+
+#ifndef ARDUINO_OTA_PORT //declare here for MINOTA:
+  #if defined(ESP32)
+    #define ARDUINO_OTA_PORT  3232
+  #else
+    // Do not use port 8266 for OTA, since that's used for ESPeasy p2p
+    #define ARDUINO_OTA_PORT  18266
+  #endif
+#endif
